@@ -33,141 +33,70 @@ namespace BlockWithMultipleTransactions
         BlockChain chain = new BlockChain();
         IBlock cacheBlock = new Block(0);
         DigitalSignature rsa = new DigitalSignature();
+
         private void btn_addTransactions_Click(object sender, EventArgs e)
         {
             if (dtg_inTransactions.RowCount > 1)
             {
-                if (chain.Blocks.Count == 0)
+                int numAdded = cacheBlock.Transaction.Count;
+                int numInTransactions = dtg_inTransactions.RowCount - 1;
+                int numTransactions = numAdded == 0 ? numInTransactions : numInTransactions - (5 - numAdded);
+                int numAddCacheTransactions = numAdded == 0 ? 0 : (numInTransactions <= 5 - numAdded ? numInTransactions : 5 - numAdded);
+
+                for (int i = 0; i < numAddCacheTransactions; i++)
                 {
-                    int numTransactions = dtg_inTransactions.RowCount - 1;
-                    int numBlocks = numTransactions / 5 + (numTransactions % 5 == 0 ? 0 : 1);
+                    string claimNumber = dtg_inTransactions.Rows[i].Cells[0].Value.ToString().Trim();
+                    string settlementAmount = dtg_inTransactions.Rows[i].Cells[1].Value.ToString().Trim();
+                    string carRegistration = dtg_inTransactions.Rows[i].Cells[2].Value.ToString().Trim();
+                    string mileage = dtg_inTransactions.Rows[i].Cells[3].Value.ToString().Trim();
+                    DateTime timestamp = DateTime.Now;
 
-                    for (int i = 0; i < numBlocks; i++)
-                    {
-                        IBlock block = new Block(nBlock);
-
-                        bool blVaildBlock = true;
-                        int iMaxTransaction = (i == numBlocks - 1) ? numTransactions % 5 : 5;
-
-                        if (iMaxTransaction < 5) cacheBlock = new Block(nBlock);
-
-                        for (int j = 0; j < iMaxTransaction; j++)
-                        {
-                            int iSettlementAmount;
-                            int iMileage;
-
-                            string claimNumber = dtg_inTransactions.Rows[i * 5 + j].Cells[0].Value.ToString().Trim();
-                            string settlementAmount = dtg_inTransactions.Rows[i * 5 + j].Cells[1].Value.ToString().Trim();
-                            string carRegistration = dtg_inTransactions.Rows[i * 5 + j].Cells[2].Value.ToString().Trim();
-                            string mileage = dtg_inTransactions.Rows[i * 5 + j].Cells[3].Value.ToString().Trim();
-                            DateTime timestamp = DateTime.Now;
-
-                            if (claimNumber.Length > 0 && settlementAmount.Length > 0 && carRegistration.Length > 0 && int.TryParse(settlementAmount, out iSettlementAmount) && int.TryParse(mileage, out iMileage))
-                            {
-                                if (iMaxTransaction < 5) cacheBlock.AddTransaction(new Transaction(claimNumber, Convert.ToDecimal(settlementAmount), timestamp, carRegistration, Convert.ToInt32(mileage), ClaimType.TotalLoss));
-
-                                else block.AddTransaction(new Transaction(claimNumber, Convert.ToDecimal(settlementAmount), timestamp, carRegistration, Convert.ToInt32(mileage), ClaimType.TotalLoss));
-
-                            }
-                            else blVaildBlock = false;
-                        }
-                        if (blVaildBlock)
-                        {
-                            nBlock += 1;
-                            if (iMaxTransaction < 5) dtg_outTransactions.DataSource = cacheBlock.Transaction;
-                            else
-                            {
-                                dtg_outTransactions.DataSource = block.Transaction;
-                                chain.AcceptBlock(block);
-                            }
-                            if (iMaxTransaction == 5) txt_nameBlock.Text = "Block " + (nBlock + 1).ToString();
-                            cb_blockList.Items.Add("Block " + nBlock.ToString());
-                            cb_blockList.SelectedIndex = cb_blockList.Items.Count - 1;
-                            if (i == numBlocks - 1) dtg_inTransactions.Rows.Clear();
-                        }
-                        else Console.WriteLine("FALSE");
-                    }
+                    cacheBlock.AddTransaction(new Transaction(claimNumber, Convert.ToDecimal(settlementAmount), timestamp, carRegistration, Convert.ToInt32(mileage), ClaimType.TotalLoss));
                 }
-                else
+                dtg_outTransactions.DataSource = null;
+                dtg_outTransactions.DataSource = cacheBlock.Transaction;
+
+                if (cacheBlock.Transaction.Count == 5)
                 {
-                    if (cacheBlock.Transaction.Count != 0 && cacheBlock.Transaction.Count < 5)
-                    {
-                        int numAdded = cacheBlock.Transaction.Count;
-                        int numInTransactions = dtg_inTransactions.RowCount - 1;
-                        int numTransactions = numInTransactions - (5 - numAdded);
-
-                        if (numTransactions <= 0)
-                        {
-                            bool blVaildBlock = true;
-                            for (int i = 0; i < numInTransactions; i++)
-                            {
-                                int iSettlementAmount;
-                                int iMileage;
-
-                                string claimNumber = dtg_inTransactions.Rows[i].Cells[0].Value.ToString().Trim();
-                                string settlementAmount = dtg_inTransactions.Rows[i].Cells[1].Value.ToString().Trim();
-                                string carRegistration = dtg_inTransactions.Rows[i].Cells[2].Value.ToString().Trim();
-                                string mileage = dtg_inTransactions.Rows[i].Cells[3].Value.ToString().Trim();
-                                DateTime timestamp = DateTime.Now;
-
-                                if (claimNumber.Length > 0 && settlementAmount.Length > 0 && carRegistration.Length > 0 && int.TryParse(settlementAmount, out iSettlementAmount) && int.TryParse(mileage, out iMileage))
-                                    cacheBlock.AddTransaction(new Transaction(claimNumber, Convert.ToDecimal(settlementAmount), timestamp, carRegistration, Convert.ToInt32(mileage), ClaimType.TotalLoss));
-                                else blVaildBlock = false;
-                            }
-                            dtg_outTransactions.DataSource = null;
-                            dtg_outTransactions.DataSource = cacheBlock.Transaction;
-                            Console.WriteLine(nBlock);
-                            if (numTransactions == 0 && blVaildBlock)
-                            {
-                                nBlock += 1;
-                                Console.WriteLine(nBlock);
-                                chain.AcceptBlock(cacheBlock);
-
-                                txt_nameBlock.Text = "Block " + (nBlock + 1).ToString();
-                                cb_blockList.SelectedIndex = cb_blockList.Items.Count - 1;
-                            }
-                            else Console.WriteLine("FALSE");
-                            
-
-                            dtg_inTransactions.Rows.Clear();
-                        }
-                        else
-                        {
-                            int numBlocks = numTransactions / 5 + (numTransactions % 5 == 0 ? 0 : 1);
-
-                            for (int i = 0; i < numBlocks; i++)
-                            {
-                                IBlock block = new Block(nBlock);
-
-                                bool blVaildBlock = true;
-                                int iMaxTransaction = (i == numBlocks - 1) ? numTransactions % 5 : 5;
-
-                                if (iMaxTransaction < 5) cacheBlock = new Block(nBlock);
-
-                                for (int j = 0; j < iMaxTransaction; j++)
-                                {
-                                    int iSettlementAmount;
-                                    int iMileage;
-
-                                    string claimNumber = dtg_inTransactions.Rows[i * 5 + j].Cells[0].Value.ToString().Trim();
-                                    string settlementAmount = dtg_inTransactions.Rows[i * 5 + j].Cells[1].Value.ToString().Trim();
-                                    string carRegistration = dtg_inTransactions.Rows[i * 5 + j].Cells[2].Value.ToString().Trim();
-                                    string mileage = dtg_inTransactions.Rows[i * 5 + j].Cells[3].Value.ToString().Trim();
-                                    DateTime timestamp = DateTime.Now;
-
-                                    if (claimNumber.Length > 0 && settlementAmount.Length > 0 && carRegistration.Length > 0 && int.TryParse(settlementAmount, out iSettlementAmount) && int.TryParse(mileage, out iMileage))
-                                    {
-                                        if (iMaxTransaction < 5) cacheBlock.AddTransaction(new Transaction(claimNumber, Convert.ToDecimal(settlementAmount), timestamp, carRegistration, Convert.ToInt32(mileage), ClaimType.TotalLoss));
-
-                                        else block.AddTransaction(new Transaction(claimNumber, Convert.ToDecimal(settlementAmount), timestamp, carRegistration, Convert.ToInt32(mileage), ClaimType.TotalLoss));
-
-                                    }
-                                    else blVaildBlock = false;
-                                }
-                            }
-                        }
-                    }
+                    chain.AcceptBlock(cacheBlock);
+                    txt_nameBlock.Text = "Block " + (nBlock + 1).ToString();
+                    cacheBlock = new Block(nBlock);
                 }
+
+                int numBlocks = numTransactions > 0 ? numTransactions / 5 + (numTransactions % 5 == 0 ? 0 : 1) : 0;
+
+                for (int i = 0; i < numBlocks; i++)
+                {
+                    IBlock block = new Block(nBlock);
+                    int iMaxTransaction = (i == numBlocks - 1) ? numTransactions % 5 : 5;
+
+                    for (int j = 0; j < iMaxTransaction; j++)
+                    {
+                        string claimNumber = dtg_inTransactions.Rows[numAddCacheTransactions + i * 5 + j].Cells[0].Value.ToString().Trim();
+                        string settlementAmount = dtg_inTransactions.Rows[numAddCacheTransactions + i * 5 + j].Cells[1].Value.ToString().Trim();
+                        string carRegistration = dtg_inTransactions.Rows[numAddCacheTransactions + i * 5 + j].Cells[2].Value.ToString().Trim();
+                        string mileage = dtg_inTransactions.Rows[numAddCacheTransactions + i * 5 + j].Cells[3].Value.ToString().Trim();
+                        DateTime timestamp = DateTime.Now;
+
+                        if (iMaxTransaction < 5) cacheBlock.AddTransaction(new Transaction(claimNumber, Convert.ToDecimal(settlementAmount), timestamp, carRegistration, Convert.ToInt32(mileage), ClaimType.TotalLoss));
+                        else block.AddTransaction(new Transaction(claimNumber, Convert.ToDecimal(settlementAmount), timestamp, carRegistration, Convert.ToInt32(mileage), ClaimType.TotalLoss));
+
+                    }
+
+                    dtg_outTransactions.DataSource = null;
+                    if (iMaxTransaction < 5) dtg_outTransactions.DataSource = cacheBlock.Transaction;
+                    else
+                    {
+                        dtg_outTransactions.DataSource = block.Transaction;
+                        chain.AcceptBlock(block);
+                    }
+                    nBlock += 1;
+                    if (iMaxTransaction == 5) txt_nameBlock.Text = "Block " + (nBlock + 1).ToString();
+                    cb_blockList.Items.Add("Block " + nBlock.ToString());
+                    cb_blockList.SelectedIndex = cb_blockList.Items.Count - 1;
+                    if (i == numBlocks - 1) dtg_inTransactions.Rows.Clear();
+                }
+                if(cacheBlock.Transaction.Count > 0) dtg_inTransactions.Rows.Clear();
             }
         }
 
