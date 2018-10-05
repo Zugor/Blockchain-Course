@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6DFD824D-9A75-450D-A332-C7EF3250F83A}</ProjectGuid>
+    <ProjectGuid>{313D2492-1801-4DB8-874F-D6A8F10098BD}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>BlockWithMultipleTransactions</RootNamespace>
-    <AssemblyName>BlockWithMultipleTransactions</AssemblyName>
+    <RootNamespace>Cryptography</RootNamespace>
+    <AssemblyName>Cryptography</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -46,31 +46,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Block.cs" />
-    <Compile Include="BlockChain.cs" />
-    <Compile Include="ClaimType.cs" />
+    <Compile Include="DigitalSignature.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IBlock.cs" />
-    <Compile Include="Interfaces\IBlockChain.cs" />
-    <Compile Include="Interfaces\ITransaction.cs" />
-    <Compile Include="Merkle\Constants.cs" />
-    <Compile Include="Merkle\ExtensionMethods.cs" />
-    <Compile Include="Merkle\MerkleException.cs" />
-    <Compile Include="Merkle\MerkleHash.cs" />
-    <Compile Include="Merkle\MerkleNode.cs" />
-    <Compile Include="Merkle\MerkleProofHash.cs" />
-    <Compile Include="Merkle\MerkleTree.cs" />
+    <Compile Include="HashData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Transaction.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -92,12 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Cryptography\Cryptography.csproj">
-      <Project>{313d2492-1801-4db8-874f-d6a8f10098bd}</Project>
-      <Name>Cryptography</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
