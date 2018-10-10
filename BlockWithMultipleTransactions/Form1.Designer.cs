@@ -42,18 +42,19 @@
             this.label4 = new System.Windows.Forms.Label();
             this.cb_blockList = new System.Windows.Forms.ComboBox();
             this.dtg_outTransactions = new System.Windows.Forms.DataGridView();
-            this.btn_addTransactions = new System.Windows.Forms.Button();
-            this.btn_sign = new System.Windows.Forms.Button();
-            this.btn_verify = new System.Windows.Forms.Button();
-            this.txt_logs = new System.Windows.Forms.RichTextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.btn_clear = new System.Windows.Forms.Button();
             this.claimNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.settlementAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.settlementDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.carRegistration = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mileage = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.claimType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btn_addTransactions = new System.Windows.Forms.Button();
+            this.btn_verify = new System.Windows.Forms.Button();
+            this.btn_clear = new System.Windows.Forms.Button();
+            this.btn_exportBlockchain = new System.Windows.Forms.Button();
+            this.btn_importBlockchain = new System.Windows.Forms.Button();
+            this.ofd_importBlockchain = new System.Windows.Forms.OpenFileDialog();
+            this.chb_signTransaction = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtg_inTransactions)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -188,71 +189,14 @@
             this.carRegistration,
             this.mileage,
             this.claimType});
-            this.dtg_outTransactions.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.dtg_outTransactions.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
             this.dtg_outTransactions.Location = new System.Drawing.Point(9, 65);
+            this.dtg_outTransactions.MultiSelect = false;
             this.dtg_outTransactions.Name = "dtg_outTransactions";
             this.dtg_outTransactions.ReadOnly = true;
             this.dtg_outTransactions.RowHeadersVisible = false;
             this.dtg_outTransactions.Size = new System.Drawing.Size(540, 150);
             this.dtg_outTransactions.TabIndex = 4;
-            // 
-            // btn_addTransactions
-            // 
-            this.btn_addTransactions.Location = new System.Drawing.Point(578, 35);
-            this.btn_addTransactions.Name = "btn_addTransactions";
-            this.btn_addTransactions.Size = new System.Drawing.Size(194, 47);
-            this.btn_addTransactions.TabIndex = 5;
-            this.btn_addTransactions.Text = "Add Transactions";
-            this.btn_addTransactions.UseVisualStyleBackColor = true;
-            this.btn_addTransactions.Click += new System.EventHandler(this.btn_addTransactions_Click);
-            // 
-            // btn_sign
-            // 
-            this.btn_sign.Location = new System.Drawing.Point(578, 88);
-            this.btn_sign.Name = "btn_sign";
-            this.btn_sign.Size = new System.Drawing.Size(194, 47);
-            this.btn_sign.TabIndex = 6;
-            this.btn_sign.Text = "Sign Transactions";
-            this.btn_sign.UseVisualStyleBackColor = true;
-            this.btn_sign.Click += new System.EventHandler(this.btn_sign_Click);
-            // 
-            // btn_verify
-            // 
-            this.btn_verify.Location = new System.Drawing.Point(578, 141);
-            this.btn_verify.Name = "btn_verify";
-            this.btn_verify.Size = new System.Drawing.Size(194, 47);
-            this.btn_verify.TabIndex = 7;
-            this.btn_verify.Text = "Verify Signature";
-            this.btn_verify.UseVisualStyleBackColor = true;
-            this.btn_verify.Click += new System.EventHandler(this.btn_verify_Click);
-            // 
-            // txt_logs
-            // 
-            this.txt_logs.Location = new System.Drawing.Point(587, 297);
-            this.txt_logs.Name = "txt_logs";
-            this.txt_logs.ReadOnly = true;
-            this.txt_logs.Size = new System.Drawing.Size(185, 202);
-            this.txt_logs.TabIndex = 8;
-            this.txt_logs.Text = "";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(584, 281);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(36, 13);
-            this.label6.TabIndex = 9;
-            this.label6.Text = "LOGS";
-            // 
-            // btn_clear
-            // 
-            this.btn_clear.Location = new System.Drawing.Point(578, 194);
-            this.btn_clear.Name = "btn_clear";
-            this.btn_clear.Size = new System.Drawing.Size(194, 47);
-            this.btn_clear.TabIndex = 10;
-            this.btn_clear.Text = "Clear All";
-            this.btn_clear.UseVisualStyleBackColor = true;
-            this.btn_clear.Click += new System.EventHandler(this.btn_clear_Click);
             // 
             // claimNumber
             // 
@@ -260,6 +204,7 @@
             this.claimNumber.HeaderText = "Claim Number";
             this.claimNumber.Name = "claimNumber";
             this.claimNumber.ReadOnly = true;
+            this.claimNumber.Width = 80;
             // 
             // settlementAmount
             // 
@@ -288,6 +233,7 @@
             this.mileage.HeaderText = "Mileage";
             this.mileage.Name = "mileage";
             this.mileage.ReadOnly = true;
+            this.mileage.Width = 80;
             // 
             // claimType
             // 
@@ -296,16 +242,82 @@
             this.claimType.Name = "claimType";
             this.claimType.ReadOnly = true;
             // 
+            // btn_addTransactions
+            // 
+            this.btn_addTransactions.Location = new System.Drawing.Point(578, 35);
+            this.btn_addTransactions.Name = "btn_addTransactions";
+            this.btn_addTransactions.Size = new System.Drawing.Size(194, 47);
+            this.btn_addTransactions.TabIndex = 5;
+            this.btn_addTransactions.Text = "Add Transactions";
+            this.btn_addTransactions.UseVisualStyleBackColor = true;
+            this.btn_addTransactions.Click += new System.EventHandler(this.btn_addTransactions_Click);
+            // 
+            // btn_verify
+            // 
+            this.btn_verify.Location = new System.Drawing.Point(578, 386);
+            this.btn_verify.Name = "btn_verify";
+            this.btn_verify.Size = new System.Drawing.Size(194, 47);
+            this.btn_verify.TabIndex = 7;
+            this.btn_verify.Text = "Verify Signature";
+            this.btn_verify.UseVisualStyleBackColor = true;
+            this.btn_verify.Click += new System.EventHandler(this.btn_verify_Click);
+            // 
+            // btn_clear
+            // 
+            this.btn_clear.Location = new System.Drawing.Point(578, 88);
+            this.btn_clear.Name = "btn_clear";
+            this.btn_clear.Size = new System.Drawing.Size(194, 47);
+            this.btn_clear.TabIndex = 10;
+            this.btn_clear.Text = "Clear All";
+            this.btn_clear.UseVisualStyleBackColor = true;
+            this.btn_clear.Click += new System.EventHandler(this.btn_clear_Click);
+            // 
+            // btn_exportBlockchain
+            // 
+            this.btn_exportBlockchain.Location = new System.Drawing.Point(578, 280);
+            this.btn_exportBlockchain.Name = "btn_exportBlockchain";
+            this.btn_exportBlockchain.Size = new System.Drawing.Size(194, 47);
+            this.btn_exportBlockchain.TabIndex = 11;
+            this.btn_exportBlockchain.Text = "Export Blockchain";
+            this.btn_exportBlockchain.UseVisualStyleBackColor = true;
+            this.btn_exportBlockchain.Click += new System.EventHandler(this.btn_exportBlockchain_Click);
+            // 
+            // btn_importBlockchain
+            // 
+            this.btn_importBlockchain.Location = new System.Drawing.Point(578, 333);
+            this.btn_importBlockchain.Name = "btn_importBlockchain";
+            this.btn_importBlockchain.Size = new System.Drawing.Size(194, 47);
+            this.btn_importBlockchain.TabIndex = 12;
+            this.btn_importBlockchain.Text = "Import Blockchain";
+            this.btn_importBlockchain.UseVisualStyleBackColor = true;
+            this.btn_importBlockchain.Click += new System.EventHandler(this.btn_importBlockchain_Click);
+            // 
+            // ofd_importBlockchain
+            // 
+            this.ofd_importBlockchain.Title = "Selecting Blockchain file";
+            // 
+            // chb_signTransaction
+            // 
+            this.chb_signTransaction.AutoSize = true;
+            this.chb_signTransaction.Checked = true;
+            this.chb_signTransaction.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chb_signTransaction.Location = new System.Drawing.Point(616, 156);
+            this.chb_signTransaction.Name = "chb_signTransaction";
+            this.chb_signTransaction.Size = new System.Drawing.Size(121, 17);
+            this.chb_signTransaction.TabIndex = 13;
+            this.chb_signTransaction.Text = "Signing transactions";
+            this.chb_signTransaction.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 511);
+            this.Controls.Add(this.chb_signTransaction);
+            this.Controls.Add(this.btn_importBlockchain);
+            this.Controls.Add(this.btn_exportBlockchain);
             this.Controls.Add(this.btn_clear);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.txt_logs);
             this.Controls.Add(this.btn_verify);
-            this.Controls.Add(this.btn_sign);
             this.Controls.Add(this.btn_addTransactions);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -336,10 +348,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button btn_addTransactions;
-        private System.Windows.Forms.Button btn_sign;
         private System.Windows.Forms.Button btn_verify;
-        private System.Windows.Forms.RichTextBox txt_logs;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button btn_clear;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
@@ -351,6 +360,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn carRegistration;
         private System.Windows.Forms.DataGridViewTextBoxColumn mileage;
         private System.Windows.Forms.DataGridViewTextBoxColumn claimType;
+        private System.Windows.Forms.Button btn_exportBlockchain;
+        private System.Windows.Forms.Button btn_importBlockchain;
+        private System.Windows.Forms.OpenFileDialog ofd_importBlockchain;
+        private System.Windows.Forms.CheckBox chb_signTransaction;
     }
 }
 

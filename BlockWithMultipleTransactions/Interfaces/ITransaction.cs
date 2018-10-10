@@ -1,4 +1,5 @@
 ﻿using System;
+using BlockChainCourse.Cryptography;
 
 namespace BlockChainCourse.BlockWithMultipleTransactions.Interfaces
 {
@@ -10,7 +11,9 @@ namespace BlockChainCourse.BlockWithMultipleTransactions.Interfaces
         string CarRegistration { get; set; }
         int Mileage { get; set; }
         ClaimType ClaimType { get; set; }
+        string Signature { get; set; }
 
-        string CalculateTransactionHash();
+        byte[] CalculateTransactionHash();
+        void SetSignature(DigitalSignature rsa);
     }
 }

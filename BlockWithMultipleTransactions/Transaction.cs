@@ -13,6 +13,7 @@ namespace BlockChainCourse.BlockWithMultipleTransactions
         public string CarRegistration { get; set; }
         public int Mileage { get; set; }
         public ClaimType ClaimType { get; set; }
+        public string Signature { get; set; }
 
         public Transaction(string claimNumber,
                             decimal settlementAmount,
@@ -29,10 +30,16 @@ namespace BlockChainCourse.BlockWithMultipleTransactions
             ClaimType = claimType;
         }
 
-        public string CalculateTransactionHash()
+        public void SetSignature(DigitalSignature rsa)
+        {
+            byte[] signData = rsa.SignData(CalculateTransactionHash());
+            Signature = Convert.ToBase64String(signData);
+        }
+
+        public byte[] CalculateTransactionHash()
         {
             string txnHash = ClaimNumber + SettlementAmount + SettlementDate + CarRegistration + Mileage + ClaimType;
-            return Convert.ToBase64String(HashData.ComputeHashSha256(Encoding.UTF8.GetBytes(txnHash)));
+            return HashData.ComputeHashSha256(Encoding.UTF8.GetBytes(txnHash));
         }
     }
 }
